@@ -3,6 +3,34 @@ import requests
 # Replace 'YOUR_API_KEY' with your actual Last.fm API key
 API_KEY = 'YOUR_API_KEY'
 
+import os
+import json
+
+def update_playlist_json(artist_name, track_name):
+    # Check if the JSON file already exists
+    if os.path.exists('settings/playlist.json'):
+        with open('settings/playlist.json', 'r') as music_list:
+            data = json.load(music_list)
+    else:
+        data = {}  # Create an empty dictionary if the file doesn't exist
+
+    # Check if the artist already exists in the JSON data
+    if artist_name in data:
+        # If the artist exists, append the track to their existing list
+        data[artist_name].append(track_name)
+    else:
+        # If the artist doesn't exist, create a new entry with the track
+        data[artist_name] = [track_name]
+
+    # Write the updated JSON data back to the file
+    with open('settings/playlist.json', 'w') as music_list:
+        json.dump(data, music_list, indent=4)
+
+# Example usage:
+artist_name = 'Example Artist'
+track_name = 'Example Track'
+update_playlist_json(artist_name, track_name)
+
 def search_artist(artist_name):
     base_url = 'http://ws.audioscrobbler.com/2.0/'
 
